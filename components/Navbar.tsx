@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingTop: 40,
+    marginTop: 40,
     paddingHorizontal: 20
   },
   circle: {

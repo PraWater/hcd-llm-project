@@ -1,5 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Link } from "expo-router";
 
 export default function ActionButtons() {
   return (
@@ -8,9 +9,11 @@ export default function ActionButtons() {
         <Ionicons name="pencil" size={30} color="#F3F3F3" />
         <Ionicons name="image" size={30} color="#F3F3F3" />
       </View>
+      <Link href="/camera">
       <View style={styles.cameraContainer}>
         <Ionicons name="camera" size={50} color="#090909" />
       </View>
+      </Link>
     </View>
   );
 }
