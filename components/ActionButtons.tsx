@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     height: 84,
     justifyContent: "center",
     alignItems: "center",
+    zIndex: 1 
   },
   buttonsContainer: {
     backgroundColor: "#090909",
