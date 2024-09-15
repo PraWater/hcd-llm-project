@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     padding: 20,
+    zIndex: 0 
   },
   history: {
     fontSize: 35,

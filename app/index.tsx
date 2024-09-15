@@ -4,8 +4,17 @@ import Hero from "@/components/Hero";
 import ActionButtons from "@/components/ActionButtons";
 import History from "@/components/History";
 import HistoryCard from "@/components/HistoryCard";
+import AddItemModal from "@/components/AddItemModal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {useState} from "react"
 export default function Index() {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const openModal = () => {
+    setIsModalOpen(true);
+  }
+  const closeModal = () => {
+    setIsModalOpen(false);
+  }
   const HistoryItems = [
     {
       name: "Dosa",
@@ -30,9 +39,10 @@ export default function Index() {
   ];
   return (
     <GestureHandlerRootView style={styles.container}>
+      {isModalOpen ? <AddItemModal closeModal={closeModal}/> : null}
       <Navbar />
       <Hero />
-      <ActionButtons />
+      <ActionButtons openModal={openModal}/>
       <History>
         {HistoryItems.map((item) => {
           return (

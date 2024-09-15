@@ -2,7 +2,6 @@ import {View, StyleSheet} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {useFonts, Montserrat_100Thin} from '@expo-google-fonts/montserrat'
 import AppLoading from 'expo-app-loading' 
-import * as SplashScreen from 'expo-splash-screen'
 export default function Navbar() {
   let [fontsLoaded] = useFonts({
     Montserrat_100Thin,

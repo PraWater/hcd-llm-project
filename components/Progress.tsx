@@ -20,21 +20,21 @@ const styles = StyleSheet.create({
   carbs: {
     position: "absolute",
     backgroundColor: "#4FA3C7",
-    width: 150,
+    width: "50%",
     borderRadius: 15,
     height: "100%"
   },
   fats: {
     position: "absolute",
     backgroundColor: "#72C87B",
-    width: 250,
+    width: "70%",
     borderRadius: 15,
     height: "100%"
   },
   protiens: {
     position: "absolute",
     backgroundColor: "#D9D07E",
-    width: 300,
+    width: "80%",
     borderRadius: 15,
     height: "100%"
   }
