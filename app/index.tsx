@@ -1,16 +1,50 @@
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ActionButtons from "@/components/ActionButtons";
 import History from "@/components/History";
+import HistoryCard from "@/components/HistoryCard";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 export default function Index() {
+  const HistoryItems = [
+    {
+      name: "Dosa",
+      time: "17:41",
+      calories: 130,
+    },
+    {
+      name: "Idly",
+      time: "7:41",
+      calories: 90,
+    },
+    {
+      name: "Biryani",
+      time: "20:20",
+      calories: 300,
+    },
+    {
+      name: "Ice Cream",
+      time: "22:30",
+      calories: 170,
+    },
+  ];
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <Navbar />
       <Hero />
       <ActionButtons />
-      <History/>
-    </View>
+      <History>
+        {HistoryItems.map((item) => {
+          return (
+            <HistoryCard
+              Name={item.name}
+              Time={item.time}
+              Calories={item.calories}
+            />
+          );
+        })}
+      </History>
+    </GestureHandlerRootView>
   );
 }
 

@@ -8,7 +8,16 @@ import {
   Montserrat_300Light,
 } from "@expo-google-fonts/montserrat";
 import AppLoading from "expo-app-loading";
-export default function HistoryCard() {
+
+export default function HistoryCard({
+  Name,
+  Time,
+  Calories,
+}: {
+  Name: string;
+  Time: string;
+  Calories: number;
+}) {
   let [fontsLoaded] = useFonts({
     Montserrat_600SemiBold,
     Montserrat_400Regular,
@@ -30,7 +39,7 @@ export default function HistoryCard() {
                 fontFamily: "Montserrat_400Regular",
               }}
             >
-              Dosa
+              {Name}
             </Text>
             <Text
               style={{
@@ -39,7 +48,7 @@ export default function HistoryCard() {
                 fontFamily: "Montserrat_300Light",
               }}
             >
-              15:06
+              {Time}
             </Text>
           </View>
         </View>
@@ -52,7 +61,7 @@ export default function HistoryCard() {
                 fontFamily: "Montserrat_500Medium",
               }}
             >
-              130
+              {Calories}
             </Text>
             <Text
               style={{
@@ -76,14 +85,13 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: 80,
-    marginTop: 20,
+    marginBottom: 20,
     backgroundColor: "#161616",
     borderRadius: 10,
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "row",
-    marginRight: 10,
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
   },
   leftContainer: {
     height: "100%",
@@ -108,6 +116,5 @@ const styles = StyleSheet.create({
   foodText: {
     display: "flex",
     marginLeft: 10,
-    alignItems: "center",
   },
 });
