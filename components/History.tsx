@@ -4,9 +4,9 @@ import {
   Montserrat_600SemiBold,
 } from "@expo-google-fonts/montserrat";
 import AppLoading from "expo-app-loading";
-import HistoryCard from "./HistoryCard";
 import { ScrollView } from "react-native-gesture-handler";
-export default function History({ children }) {
+
+export default function History({ children }: { children: any }) {
   let [fontsLoaded] = useFonts({
     Montserrat_600SemiBold,
   });
@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    height: "100%",
     display: "flex",
     flexDirection: "column",
     padding: 20,
