@@ -7,6 +7,7 @@ import HistoryCard from "@/components/HistoryCard";
 import AddItemModal from "@/components/AddItemModal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {useState} from "react"
+import ProgressCircles from "@/components/ProgressCircles";
 export default function Index() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const openModal = () => {
@@ -42,6 +43,7 @@ export default function Index() {
       {isModalOpen ? <AddItemModal closeModal={closeModal}/> : null}
       <Navbar />
       <Hero />
+      <ProgressCircles Carbs={0.8} Fats={0.6} Proteins={0.35}/>
       <ActionButtons openModal={openModal}/>
       <History>
         {HistoryItems.map((item) => {
@@ -60,7 +62,7 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#090910",
+    backgroundColor: "#090909",
     height: "100%",
     width: "100%",
     padding: 0,

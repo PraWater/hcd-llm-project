@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
     width: "100%",
     display: "flex",
     flexDirection: "column",
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 14,
     zIndex: 0 
   },
   history: {

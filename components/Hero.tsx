@@ -28,7 +28,6 @@ export default function Hero() {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: 300,
     padding: 20
   },
   heading: {

@@ -21,13 +21,12 @@ export default function Navbar() {
 const styles = StyleSheet.create({
   container: {
     width:"100%",
-    height: 100,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: 40,
-    marginTop: 40,
+    marginTop: 60,
+    marginBottom: 4,
     paddingHorizontal: 20
   },
   circle: {
