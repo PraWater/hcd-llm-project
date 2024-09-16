@@ -1,7 +1,26 @@
 import {View, StyleSheet, Text, Pressable} from "react-native";
+import { useState } from "react";
+import { TextInput } from "react-native-paper";
 import {useFonts, Montserrat_600SemiBold,Montserrat_500Medium, Montserrat_400Regular, Montserrat_300Light} from '@expo-google-fonts/montserrat'
 import AppLoading from 'expo-app-loading' 
 export default function AddItemModal({closeModal} : {closeModal : any}) {
+  const [itemName, setItemName] = useState<string>("")
+  const [carbs, setCarbs] = useState<string>("")
+  const [prots, setProts] = useState<string>("")
+  const [fats, setFats] = useState<string>("")
+  const handleCarbs = (text : string) => {
+    const numericValue = text.replace(/[^0-9]/g, "")
+    console.log(numericValue)
+    setCarbs(numericValue)
+  }
+  const handleProts= (text : string) => {
+    const numericValue = text.replace(/[^0-9]/g, "")
+    setProts(numericValue)
+  }
+  const handleFats = (text : string) => {
+    const numericValue = text.replace(/[^0-9]/g, "")
+    setFats(numericValue)
+  }
   let [fontsLoaded] = useFonts({
     Montserrat_600SemiBold,
     Montserrat_400Regular,
@@ -16,19 +35,12 @@ export default function AddItemModal({closeModal} : {closeModal : any}) {
         <View style={styles.modal}>
           <Text style={{color:"white", fontSize:30, fontFamily:"Montserrat_500Medium", marginTop: 20}}>Add Food Item</Text>
           <View style={styles.form}>
-            <View style={styles.formElement}>
-              <Text style={{color: "white", fontSize:18, fontFamily: "Montserrat_400Regular"}}>Item Name</Text> 
-            </View>
-            <View style={styles.formElement}>
-              <Text style={{color: "white", fontSize:18, fontFamily: "Montserrat_400Regular"}}>Carbohydrates</Text> 
-            </View>
-            <View style={styles.formElement}>
-              <Text style={{color: "white", fontSize:18, fontFamily: "Montserrat_400Regular"}}>Proteins</Text> 
-            </View>
-            <View style={styles.formElement}>
-              <Text style={{color: "white", fontSize:18, fontFamily: "Montserrat_400Regular"}}>Fats</Text> 
-            </View>
+                  <TextInput mode="outlined" theme={{roundness: 18}} label={"Item Name"} textColor="white" style={styles.inputField} activeOutlineColor="white" value={itemName} onChangeText={itemName => setItemName(itemName)}/>
+                  <TextInput mode="outlined" keyboardType="numeric" autoComplete="cc-number" theme={{roundness: 18}} label={"Carbohydrates"} textColor="#4FA3C7" style={styles.inputField} outlineColor="#4FA3C7" activeOutlineColor="#4FA3C7" value={carbs} onChangeText={handleCarbs}/>
+                  <TextInput mode="outlined" autoComplete="cc-number" theme={{roundness: 18}} label={"Protiens"} textColor="#72C87B" style={styles.inputField} activeOutlineColor="#72C87B" outlineColor="#72C87B" value={prots} onChangeText={handleProts}/>
+                  <TextInput mode="outlined" autoComplete="cc-number" theme={{roundness: 18}} label={"Fats"} textColor="#D9D07E" style={styles.inputField} outlineColor="#D9D07E" activeOutlineColor="#D9D07E" value={fats} onChangeText={handleFats}/>
           </View>
+          <Pressable onPress={closeModal}><View style={styles.submitButton}><Text style={{fontSize: 20, fontWeight: 600}}>Submit</Text></View></Pressable>
         </View>
       </View>
     );
@@ -71,19 +83,21 @@ const styles = StyleSheet.create({
     marginTop: 10,
     gap: 10
   },
-  formElement: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    gap:5
+  inputField: {
+    backgroundColor: "#1A1A1A",
+    borderRadius: 20,
+    fontFamily: "Montserrat_500Medium"
   },
-  input: {
-    backgroundColor: "#BDC3C7",
-    borderRadius: 15,
-    color: "black",
-    paddingHorizontal: 15,
+  submitButton: {
+    fontFamily: "Montserrat_500Medium",
+    height: 50,
+    width: 150,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#96BAC9",
     paddingVertical: 10,
-    fontFamily: "Montserrat_400Regular"
-
+    paddingHorizontal: 20,
+    marginBottom: 10,
+    borderRadius: 20
   }
 });
