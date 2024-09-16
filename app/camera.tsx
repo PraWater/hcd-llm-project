@@ -1,18 +1,37 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, Button, StyleSheet, Text, View } from "react-native";
-import { useRef } from "react";
- 
+import { Pressable, Button, StyleSheet, Text, View, Image } from "react-native";
+import { useRef, useState } from "react";
+
 export default function App() {
+  const [picture, setPicture] = useState<any>(null);
   const cameraRef = useRef(null);
   const [permission, requestPermission] = useCameraPermissions();
 
   const onCameraClick = async () => {
     if (cameraRef.current) {
       //await cameraRef.current.onCameraReady();
-      const picture = await cameraRef.current.takePictureAsync();
-      console.log(picture.uri)
+      const capturedPicture = await cameraRef.current.takePictureAsync();
+      setPicture(capturedPicture);
     }
+  };
+
+  if (picture !== null) {
+    return (
+      <View style={styles.imageContainer}>
+        <Image source={picture} style={styles.image} />
+        <View style={styles.buttonContainer}>
+          <Pressable style={styles.imageButton}>
+            <Text>Retake</Text>
+          </Pressable>
+          <Pressable style={[styles.imageButton, {
+            backgroundColor: "#96BAC9"
+          }]}>
+            <Text>Use</Text>
+          </Pressable>
+        </View>
+      </View>
+    );
   }
 
   if (!permission) {
@@ -55,7 +74,7 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
-    alignItems: "center"
+    alignItems: "center",
   },
   text: {
     fontSize: 24,
@@ -71,5 +90,32 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
+  },
+  imageContainer: {
+    flex: 1,
+    alignItems: "center",
+    paddingTop: 120,
+    paddingBottom: 60,
+    backgroundColor: "#090909",
+    justifyContent: "space-between",
+  },
+  image: {
+    width: 360,
+    height: 480,
+    borderRadius: 18,
+  },
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    marginHorizontal: 20,
+    gap: 12,
+  },
+  imageButton: {
+    backgroundColor: "#ffffff",
+    height: 52,
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
   },
 });
