@@ -7,14 +7,50 @@ export default function App() {
   const [picture, setPicture] = useState<any>(null);
   const cameraRef = useRef(null);
   const [permission, requestPermission] = useCameraPermissions();
+  const [data, setData] = useState<object>(null);
 
   const onCameraClick = async () => {
     if (cameraRef.current) {
       //await cameraRef.current.onCameraReady();
-      const capturedPicture = await cameraRef.current.takePictureAsync();
+      const capturedPicture = await cameraRef.current.takePictureAsync({
+        quality: 0,
+      });
       setPicture(capturedPicture);
     }
   };
+
+  const onUseClick = async () => {
+    let formData = new FormData();
+    formData.append("image", {
+      uri: picture.uri,
+      name: "food1.jpg",
+      type: "image/jpeg",
+    });
+
+    let response = await fetch("http://172.17.60.242:5000/upload-image", {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data", // Set Content-Type for form-data
+      },
+      body: formData, // Attach the form-data with the image
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    let jsonResponse = await response.json();
+    console.log(jsonResponse);
+    setData(jsonResponse);
+  };
+
+  if (data !== null) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>{JSON.stringify(data)}</Text>
+      </View>
+    );
+  }
 
   if (picture !== null) {
     return (
@@ -24,9 +60,15 @@ export default function App() {
           <Pressable style={styles.imageButton}>
             <Text>Retake</Text>
           </Pressable>
-          <Pressable style={[styles.imageButton, {
-            backgroundColor: "#96BAC9"
-          }]}>
+          <Pressable
+            onPress={onUseClick}
+            style={[
+              styles.imageButton,
+              {
+                backgroundColor: "#96BAC9",
+              },
+            ]}
+          >
             <Text>Use</Text>
           </Pressable>
         </View>
