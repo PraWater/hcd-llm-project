@@ -7,7 +7,9 @@ import {
   Montserrat_400Regular,
   Montserrat_300Light,
 } from "@expo-google-fonts/montserrat";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function HistoryCard({
   Name,
@@ -25,7 +27,7 @@ export default function HistoryCard({
     Montserrat_500Medium,
   });
   if (!fontsLoaded) {
-    return <AppLoading />;
+    SplashScreen.hideAsync();
   } else {
     return (
       <View style={styles.container}>

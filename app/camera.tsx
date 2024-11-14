@@ -13,7 +13,7 @@ export default function App() {
     if (cameraRef.current) {
       //await cameraRef.current.onCameraReady();
       const capturedPicture = await cameraRef.current.takePictureAsync({
-        quality: 0,
+        quality: 0.8,
       });
       setPicture(capturedPicture);
     }
@@ -27,12 +27,12 @@ export default function App() {
       type: "image/jpeg",
     });
 
-    let response = await fetch("http://172.17.60.242:5000/upload-image", {
+    let response = await fetch(process.env.EXPO_PUBLIC_LAPTOP_LOCALHOST + "/get-calories", {
       method: "POST",
       headers: {
-        "Content-Type": "multipart/form-data", // Set Content-Type for form-data
+        "Content-Type": "multipart/form-data",
       },
-      body: formData, // Attach the form-data with the image
+      body: formData,
     });
 
     if (!response.ok) {

@@ -1,8 +1,10 @@
 import { Text, View, StyleSheet } from "react-native";
 import * as Prog from "react-native-progress";
-import AppLoading from "expo-app-loading";
 import { useEffect, useState } from "react";
 import { useFonts, Montserrat_600SemiBold, Montserrat_400Regular } from "@expo-google-fonts/montserrat";
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function ProgressCircles({
   Carbs,
@@ -29,7 +31,7 @@ export default function ProgressCircles({
     }, 500);
   }, [Carbs, Fats, Proteins]);
   if (!fontsLoaded) {
-    return <AppLoading />;
+    SplashScreen.hideAsync();
   } else {
     return (
       <View style={styles.outerContainer}>

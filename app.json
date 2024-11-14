@@ -1,17 +1,12 @@
 {
   "expo": {
-    "name": "hcd-llm-project",
-    "slug": "hcd-llm-project",
+    "name": "hcd-llm",
+    "slug": "hcd-llm",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
@@ -28,8 +23,16 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font",
-      "expo-camera",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

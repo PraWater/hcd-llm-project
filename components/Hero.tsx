@@ -4,15 +4,18 @@ import {
   Montserrat_400Regular,
   Montserrat_700Bold,
 } from '@expo-google-fonts/montserrat'
-import AppLoading from 'expo-app-loading'
+import * as SplashScreen from 'expo-splash-screen';
 import Progress from "@/components/Progress"
+
+SplashScreen.preventAutoHideAsync();
+
 export default function Hero() {
   let [fontsLoaded] = useFonts({
     Montserrat_400Regular,
     Montserrat_700Bold,
   })
   if (!fontsLoaded) {
-    return <AppLoading />;
+    SplashScreen.hideAsync();
   } else {
     return (
       <View style={styles.container}>

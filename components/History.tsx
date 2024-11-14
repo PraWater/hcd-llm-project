@@ -3,15 +3,17 @@ import {
   useFonts,
   Montserrat_600SemiBold,
 } from "@expo-google-fonts/montserrat";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from 'expo-splash-screen';
 import { ScrollView } from "react-native-gesture-handler";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function History({ children }: { children: any }) {
   let [fontsLoaded] = useFonts({
     Montserrat_600SemiBold,
   });
   if (!fontsLoaded) {
-    return <AppLoading />;
+    SplashScreen.hideAsync();
   } else {
     return (
       <View style={styles.container}>

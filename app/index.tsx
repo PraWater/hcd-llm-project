@@ -49,6 +49,7 @@ export default function Index() {
         {HistoryItems.map((item) => {
           return (
             <HistoryCard
+              key={item.time}
               Name={item.name}
               Time={item.time}
               Calories={item.calories}
