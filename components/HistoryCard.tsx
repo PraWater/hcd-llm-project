@@ -7,7 +7,7 @@ import {
   Montserrat_400Regular,
   Montserrat_300Light,
 } from "@expo-google-fonts/montserrat";
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,7 +32,6 @@ export default function HistoryCard({
     return (
       <View style={styles.container}>
         <View style={styles.leftContainer}>
-          <View style={styles.foodImg} />
           <View style={styles.foodText}>
             <Text
               style={{
@@ -108,12 +107,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 20,
-  },
-  foodImg: {
-    height: 45,
-    width: 80,
-    borderRadius: 6,
-    backgroundColor: "#D9D9D9",
   },
   foodText: {
     display: "flex",

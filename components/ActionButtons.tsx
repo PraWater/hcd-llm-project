@@ -1,11 +1,10 @@
-import { StyleSheet, View, TouchableOpacity} from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import Gradient from "@/assets/Gradient";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import AddItemModal from "./AddItemModal";
-export default function ActionButtons({openModal} : {openModal : any}) {
+export default function ActionButtons({ openModal }: { openModal: any }) {
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -16,25 +15,29 @@ export default function ActionButtons({openModal} : {openModal : any}) {
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
     } else {
-      alert('You did not select any image.');
+      console.log("User didn't select image");
     }
   };
 
   return (
-      <View style={styles.container}>
-      <Gradient style={styles.gradient}/>
+    <View style={styles.container}>
+      <Gradient style={styles.gradient} />
       <View style={styles.innerContainer}>
-      <View style={styles.buttonsContainer}>
-      <TouchableOpacity onPress={openModal}><Ionicons name="pencil" size={30} color="#F3F3F3" /></TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.5} onPress={pickImageAsync}><Ionicons name="image" size={30} color="#F3F3F3" /></TouchableOpacity>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity onPress={openModal}>
+            <Ionicons name="pencil" size={30} color="#F3F3F3" />
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.5} onPress={pickImageAsync}>
+            <Ionicons name="image" size={30} color="#F3F3F3" />
+          </TouchableOpacity>
+        </View>
+        <Link push href="/camera">
+          <View style={styles.cameraContainer}>
+            <Ionicons name="camera" size={50} color="#090909" />
+          </View>
+        </Link>
       </View>
-      <Link href="/camera">
-      <View style={styles.cameraContainer}>
-      <Ionicons name="camera" size={50} color="#090909" />
-      </View>
-      </Link>
-      </View>
-      </View>
+    </View>
   );
 }
 
@@ -45,7 +48,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: 124,
-    zIndex: 1
+    zIndex: 1,
   },
   gradient: {
     position: "absolute",

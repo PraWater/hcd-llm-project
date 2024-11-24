@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import os
 import base64
+import sqlite3
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel, Field
@@ -10,13 +11,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-
-
-UPLOAD_FOLDER = 'uploaded_images'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
 
 
 class CalorieAnalysis(BaseModel):
@@ -45,6 +39,7 @@ model = ChatGoogleGenerativeAI(
 
 @app.route('/get-calories', methods=['POST'])
 def get_calories():
+    print("calories requested")
     if 'image' not in request.files:
         return jsonify({'error': 'No image file provided'}), 400
 
@@ -64,10 +59,47 @@ def get_calories():
         ])
         response = model.invoke([combined_prompt])
         parsed_response = json_parser.parse(response.content)
-        return parsed_response
+        return parsed_response, 200
 
     except IOError:
         return jsonify({'error': 'Invalid image file'}), 400
+
+
+def init_db(conn):
+    conn.execute('''CREATE TABLE IF NOT EXISTS FoodItems
+        (id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userId INT NOT NULL,
+        timestamp TEXT NOT NULL,
+        name TEXT,
+        calories TEXT,
+        proteins TEXT,
+        fats TEXT,
+        carbohydrates TEXT,
+        dietary_fiber TEXT,
+        sugars TEXT,
+        sodium TEXT,
+        cholesterol TEXT);''')
+
+
+@app.route('/store-food', methods=['POST'])
+def store_food():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({'error': 'No JSON data provided'}), 400
+
+    print(data)
+    conn = sqlite3.connect('hcd-llm.db')
+    init_db(conn)
+
+    insert_command = '''INSERT INTO FoodItems (userId, timestamp, name, calories, proteins, fats, carbohydrates, dietary_fiber, sugars, sodium, cholesterol) VALUES (1, datetime('now', 'localtime'), ?, ?, ?, ?, ?, ?, ?, ?, ?);'''
+    insert_values = (data['name'], data['calories'], data['proteins'], data['fats'], data['carbohydrates'], data['dietary_fiber'], data['sugars'], data['sodium'], data['cholesterol'])
+
+    cur = conn.cursor()
+    cur.execute(insert_command, insert_values)
+    conn.commit()
+
+    return 'ok', 200
 
 
 @app.route('/')

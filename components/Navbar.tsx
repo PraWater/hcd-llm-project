@@ -1,21 +1,21 @@
-import {View, StyleSheet} from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {useFonts, Montserrat_100Thin} from '@expo-google-fonts/montserrat'
-import * as SplashScreen from 'expo-splash-screen';
+import { useFonts, Montserrat_100Thin } from "@expo-google-fonts/montserrat";
+import * as SplashScreen from "expo-splash-screen";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Navbar() {
   let [fontsLoaded] = useFonts({
     Montserrat_100Thin,
-  })
-  if(!fontsLoaded){
+  });
+  if (!fontsLoaded) {
     SplashScreen.hideAsync();
-  }else{
+  } else {
     return (
-      <View style = {styles.container}>
-      <Ionicons name="menu-outline" size={50} color="white"/>
-      <View style = {styles.circle}/>
+      <View style={styles.container}>
+        <Ionicons name="menu-outline" size={50} color="white" />
+        <View style={styles.circle} />
       </View>
     );
   }
@@ -23,19 +23,19 @@ export default function Navbar() {
 
 const styles = StyleSheet.create({
   container: {
-    width:"100%",
+    width: "100%",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 60,
+    marginTop: 20,
     marginBottom: 4,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   circle: {
     height: 40,
     width: 40,
     borderRadius: 100,
-    backgroundColor: "white"
-  }
+    backgroundColor: "white",
+  },
 });

@@ -2,12 +2,15 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Button, StyleSheet, Text, View, Image } from "react-native";
 import { useRef, useState } from "react";
+import { router } from "expo-router";
+import CaloriesResult from "@/components/CaloriesResult";
 
 export default function App() {
   const [picture, setPicture] = useState<any>(null);
   const cameraRef = useRef(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [data, setData] = useState<object>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onCameraClick = async () => {
     if (cameraRef.current) {
@@ -20,6 +23,7 @@ export default function App() {
   };
 
   const onUseClick = async () => {
+    setLoading(true);
     let formData = new FormData();
     formData.append("image", {
       uri: picture.uri,
@@ -27,27 +31,78 @@ export default function App() {
       type: "image/jpeg",
     });
 
-    let response = await fetch(process.env.EXPO_PUBLIC_LAPTOP_LOCALHOST + "/get-calories", {
-      method: "POST",
-      headers: {
-        "Content-Type": "multipart/form-data",
+    let response = await fetch(
+      process.env.EXPO_PUBLIC_LAPTOP_LOCALHOST + "/get-calories",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        body: formData,
       },
-      body: formData,
-    });
+    );
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
 
+    setLoading(false);
     let jsonResponse = await response.json();
-    console.log(jsonResponse);
     setData(jsonResponse);
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>Loading...</Text>
+      </View>
+    );
+  }
+
+  const onAcceptClick = async () => {
+    let response = await fetch(
+      process.env.EXPO_PUBLIC_LAPTOP_LOCALHOST + "/store-food",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // JSON content type
+        },
+        body: JSON.stringify(data),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    setData(null);
+    router.back();
+  };
+
+  const onCancelClick = () => {
+    setData(null);
+    router.back();
   };
 
   if (data !== null) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>{JSON.stringify(data)}</Text>
+      <View style={styles.resultContainer}>
+        <CaloriesResult data={data} />
+        <View style={styles.buttonContainer}>
+          <Pressable style={styles.imageButton} onPress={onCancelClick}>
+            <Text>Cancel</Text>
+          </Pressable>
+          <Pressable
+            onPress={onAcceptClick}
+            style={[
+              styles.imageButton,
+              {
+                backgroundColor: "#96BAC9",
+              },
+            ]}
+          >
+            <Text>Accept</Text>
+          </Pressable>
+        </View>
       </View>
     );
   }
@@ -57,7 +112,10 @@ export default function App() {
       <View style={styles.imageContainer}>
         <Image source={picture} style={styles.image} />
         <View style={styles.buttonContainer}>
-          <Pressable style={styles.imageButton}>
+          <Pressable
+            style={styles.imageButton}
+            onPress={() => setPicture(null)}
+          >
             <Text>Retake</Text>
           </Pressable>
           <Pressable
@@ -137,6 +195,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingTop: 120,
+    paddingBottom: 60,
+    backgroundColor: "#090909",
+    justifyContent: "space-between",
+  },
+  resultContainer: {
+    flex: 1,
+    alignItems: "center",
+    paddingTop: 20,
     paddingBottom: 60,
     backgroundColor: "#090909",
     justifyContent: "space-between",
