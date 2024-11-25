@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ActionButtons from "@/components/ActionButtons";
@@ -6,52 +6,51 @@ import History from "@/components/History";
 import HistoryCard from "@/components/HistoryCard";
 import AddItemModal from "@/components/AddItemModal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {useState} from "react"
+import { useEffect, useState } from "react";
 import ProgressCircles from "@/components/ProgressCircles";
 export default function Index() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [historyItems, setHistoryItems] = useState<Object>(null);
+
   const openModal = () => {
     setIsModalOpen(true);
-  }
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
-  }
-  const HistoryItems = [
-    {
-      name: "Dosa",
-      time: "17:41",
-      calories: 130,
-    },
-    {
-      name: "Idly",
-      time: "7:41",
-      calories: 90,
-    },
-    {
-      name: "Biryani",
-      time: "20:20",
-      calories: 300,
-    },
-    {
-      name: "Ice Cream",
-      time: "22:30",
-      calories: 170,
-    },
-  ];
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        process.env.EXPO_PUBLIC_LAPTOP_LOCALHOST + "/get-food",
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+
+      }
+      const jsonResponse = await response.json()
+      setHistoryItems(jsonResponse)
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <GestureHandlerRootView style={styles.container}>
-      {isModalOpen ? <AddItemModal closeModal={closeModal}/> : null}
+      {isModalOpen ? <AddItemModal closeModal={closeModal} /> : null}
       <Navbar />
       <Hero />
-      <ProgressCircles Carbs={0.8} Fats={0.6} Proteins={0.35}/>
-      <ActionButtons openModal={openModal}/>
+      <ProgressCircles Carbs={0.8} Fats={0.6} Proteins={0.35} />
+      <ActionButtons openModal={openModal} />
       <History>
-        {HistoryItems.map((item) => {
+        {historyItems && historyItems.reverse().map((item) => {
           return (
             <HistoryCard
-              key={item.time}
+              key={item.id}
               Name={item.name}
-              Time={item.time}
+              Time={item.timestamp}
               Calories={item.calories}
             />
           );

@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-import os
 import base64
 import sqlite3
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -93,13 +92,33 @@ def store_food():
     init_db(conn)
 
     insert_command = '''INSERT INTO FoodItems (userId, timestamp, name, calories, proteins, fats, carbohydrates, dietary_fiber, sugars, sodium, cholesterol) VALUES (1, datetime('now', 'localtime'), ?, ?, ?, ?, ?, ?, ?, ?, ?);'''
-    insert_values = (data['name'], data['calories'], data['proteins'], data['fats'], data['carbohydrates'], data['dietary_fiber'], data['sugars'], data['sodium'], data['cholesterol'])
+    insert_values = (data['name'], data['calories'], data['proteins'], data['fats'], data['carbohydrates'],
+                     data['dietary_fiber'], data['sugars'], data['sodium'], data['cholesterol'])
 
     cur = conn.cursor()
     cur.execute(insert_command, insert_values)
     conn.commit()
 
     return 'ok', 200
+
+
+def query_db(query, args=(), one=False):
+    """Helper function to query the database."""
+    conn = sqlite3.connect('hcd-llm.db')
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    cur.execute(query, args)
+    rv = cur.fetchall()
+    conn.close()
+    return (rv[0] if rv else None) if one else rv
+
+
+@app.route('/get-food', methods=['GET'])
+def get_food():
+    print("get food requested")
+    rows = query_db('SELECT * FROM FoodItems')
+    food = [dict(row) for row in rows]
+    return jsonify(food), 200
 
 
 @app.route('/')
