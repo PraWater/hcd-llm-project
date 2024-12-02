@@ -6,6 +6,7 @@ from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel, Field
 from langchain_core.messages import HumanMessage
 from dotenv import load_dotenv
+import datetime
 
 load_dotenv()
 
@@ -141,6 +142,51 @@ def get_food():
     rows = query_db('SELECT * FROM FoodItems')
     food = [dict(row) for row in rows]
     return jsonify(food), 200
+
+
+class DietarySummary(BaseModel):
+    summary: str = Field(
+        description="A high-level summary of the user's diet in the past 24 hours")
+    deviations: str = Field(
+        description="Any deviations from the user's stated goals")
+    suggestions: str = Field(
+        description="Suggestions for the user to meet their goals more effectively")
+
+
+summary_parser = JsonOutputParser(pydantic_object=DietarySummary)
+
+user_goals = "maintain a calorie intake of 1500 kcal per day while focusing on reducing sugar and fat consumption."
+
+summary_prompt = f"""
+You are a professional dietitian assisting a user in analyzing their dietary intake over the past 24 hours. The user has the following fitness goals:
+{user_goals}
+
+Based on the data below, provide:
+1. A high-level summary of the user's diet.
+2. Any deviations from their stated goals.
+3. Suggestions to help them better align with their goals.
+
+Format your response in the following JSON structure:
+{summary_parser.get_format_instructions()}
+
+Dietary intake data:
+"""
+
+
+@app.route('/get-summary', methods=['GET'])
+def get_summary():
+    print("get summary requested")
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    yesterday = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
+    rows = query_db(
+        f"SELECT * FROM FoodItems WHERE timestamp < '{now}' AND timestamp > '{yesterday}'")
+    combined_prompt = HumanMessage(content=[
+        {"type": "text", "text": summary_prompt},
+        {"type": "text", "text": rows}
+    ])
+    response = model.invoke([combined_prompt])
+    parsed_response = summary_parser.parse(response.content)
+    return parsed_response
 
 
 @app.route('/')
