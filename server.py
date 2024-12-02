@@ -12,25 +12,35 @@ load_dotenv()
 app = Flask(__name__)
 
 
+class FoodIdentification(BaseModel):
+    name: str = Field(description="Name of the food item")
+    weight: float = Field(
+        description="Estimated weight of the food item in grams")
+
+
 class CalorieAnalysis(BaseModel):
-    name: str = Field(description="name of food sample in the image in kcal")
-    calories: str = Field(description="calorie content of food sample in g")
-    proteins: str = Field(description="protein content of food sample in g")
-    fats: str = Field(description="fats content of food sample in g")
-    carbohydrates: str = Field(
-        description="carbohydrate content of food sample in g")
-    dietary_fiber: str = Field(description="fiber content of food sample in g")
-    sugars: str = Field(description="sugar content of food sample in g")
-    sodium: str = Field(description="sodium content of food sample in mg")
-    cholesterol: str = Field(
-        description="cholesterol content of food sample in mg")
+    name: str = Field(description="Name of the food item")
+    calories: float = Field(
+        description="Calorie content of the food sample in kcal")
+    proteins: float = Field(
+        description="Protein content of the food sample in g")
+    fats: float = Field(description="Fats content of the food sample in g")
+    carbohydrates: float = Field(
+        description="Carbohydrate content of the food sample in g")
+    dietary_fiber: float = Field(
+        description="Fiber content of the food sample in g")
+    sugars: float = Field(description="Sugar content of the food sample in g")
+    sodium: float = Field(
+        description="Sodium content of the food sample in mg")
+    cholesterol: float = Field(
+        description="Cholesterol content of the food sample in mg")
 
 
-json_parser = JsonOutputParser(pydantic_object=CalorieAnalysis)
+food_parser = JsonOutputParser(pydantic_object=FoodIdentification)
+calorie_parser = JsonOutputParser(pydantic_object=CalorieAnalysis)
 
-
-text_prompt = f"You are an expert dietician and you are helping your client estimate the amount of calories they are about to consume. The client requires accurate information for helping them achieve their fitness goals which you are responsible for. Estimate the amount of calories in this image. Step 1: Identify the food item in this image. Step 2: Estimate the weight (in grams) of the food item. Step 3: Now estimate the calorie count using the weight from step 2. Step 4: Now divide the content into calories, proteins, fats, etc. {
-    json_parser.get_format_instructions()}"
+identification_prompt = f"Step 1: Identify the food item in this image. Step 2: Estimate the weight of the food item in grams. {
+    food_parser.get_format_instructions()}"
 
 model = ChatGoogleGenerativeAI(
     model="gemini-1.5-flash")
@@ -49,16 +59,28 @@ def get_calories():
     image_url = f"data:image/jpeg;base64,{base64_image}"
 
     try:
-        combined_prompt = HumanMessage(content=[
+        identifier_prompt = HumanMessage(content=[
             {"type": "image_url", "image_url": image_url},
             {
                 "type": "text",
-                "text": text_prompt
+                "text": identification_prompt
             }
         ])
-        response = model.invoke([combined_prompt])
-        parsed_response = json_parser.parse(response.content)
-        return parsed_response, 200
+        response = model.invoke([identifier_prompt])
+        parsed_response_1 = food_parser.parse(response.content)
+
+        food_name = parsed_response_1['name']
+        weight = parsed_response_1['weight']
+
+        analysis_prompt = HumanMessage(content=[
+            {
+                "type": "text",
+                "text": f"You are an expert dietician and you are helping your client estimate the amount of calories they are about to consume. The client requires accurate information for helping them achieve their fitness goals which you are responsible for. You have identified the food item as '{food_name}' weighing approximately {weight} grams. Provide a detailed nutritional analysis, including calories, proteins, fats, carbohydrates, dietary fiber, sugars, sodium, and cholesterol. {calorie_parser.get_format_instructions()}"
+            }
+        ])
+        response_2 = model.invoke([analysis_prompt])
+        parsed_response_2 = calorie_parser.parse(response_2.content)
+        return parsed_response_2, 200
 
     except IOError:
         return jsonify({'error': 'Invalid image file'}), 400
