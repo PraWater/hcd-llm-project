@@ -1,0 +1,6 @@
+Flask
+pydantic
+python-dotenv
+langchain-google-genai
+langchain-core
+sqlite3  # Optional: sqlite3 is included in Python's standard library, so this may not be necessary

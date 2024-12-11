@@ -1,46 +1,78 @@
-import {View, StyleSheet, Text, Pressable} from "react-native";
+import { View, StyleSheet, Text, Pressable } from "react-native";
 import { useState } from "react";
-import { TextInput } from "react-native-paper";
-import {useFonts, Montserrat_600SemiBold,Montserrat_500Medium, Montserrat_400Regular, Montserrat_300Light} from '@expo-google-fonts/montserrat'
-import AppLoading from 'expo-app-loading' 
-export default function AddItemModal({closeModal} : {closeModal : any}) {
-  const [itemName, setItemName] = useState<string>("")
-  const [carbs, setCarbs] = useState<string>("")
-  const [prots, setProts] = useState<string>("")
-  const [fats, setFats] = useState<string>("")
-  const handleCarbs = (text : string) => {
-    const numericValue = text.replace(/[^0-9]/g, "")
-    console.log(numericValue)
-    setCarbs(numericValue)
-  }
-  const handleProts= (text : string) => {
-    const numericValue = text.replace(/[^0-9]/g, "")
-    setProts(numericValue)
-  }
-  const handleFats = (text : string) => {
-    const numericValue = text.replace(/[^0-9]/g, "")
-    setFats(numericValue)
-  }
+//import { TextInput } from "react-native-paper";
+import {
+  useFonts,
+  Montserrat_600SemiBold,
+  Montserrat_500Medium,
+  Montserrat_400Regular,
+  Montserrat_300Light,
+} from "@expo-google-fonts/montserrat";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
+export default function AddItemModal({ closeModal }: { closeModal: any }) {
+  const [itemName, setItemName] = useState<string>("");
+  const [carbs, setCarbs] = useState<string>("");
+  const [prots, setProts] = useState<string>("");
+  const [fats, setFats] = useState<string>("");
+  const handleCarbs = (text: string) => {
+    const numericValue = text.replace(/[^0-9]/g, "");
+    console.log(numericValue);
+    setCarbs(numericValue);
+  };
+  const handleProts = (text: string) => {
+    const numericValue = text.replace(/[^0-9]/g, "");
+    setProts(numericValue);
+  };
+  const handleFats = (text: string) => {
+    const numericValue = text.replace(/[^0-9]/g, "");
+    setFats(numericValue);
+  };
   let [fontsLoaded] = useFonts({
     Montserrat_600SemiBold,
     Montserrat_400Regular,
     Montserrat_300Light,
-    Montserrat_500Medium
-  })
-  if(!fontsLoaded){
-    return <AppLoading/>;
-  }else{
+    Montserrat_500Medium,
+  });
+  if (!fontsLoaded) {
+    SplashScreen.hideAsync();
+  } else {
     return (
       <View style={styles.container}>
         <View style={styles.modal}>
-          <Text style={{color:"white", fontSize:28, fontFamily:"Montserrat_500Medium", marginTop: 20}}>Add Food Item</Text>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 28,
+              fontFamily: "Montserrat_500Medium",
+              marginTop: 20,
+            }}
+          >
+            Add Food Item
+          </Text>
           <View style={styles.form}>
+            {/*
                   <TextInput mode="outlined" theme={{roundness: 18}} label={"Item Name"} textColor="white" style={styles.inputField} activeOutlineColor="white" value={itemName} onChangeText={itemName => setItemName(itemName)}/>
                   <TextInput mode="outlined" keyboardType="numeric" autoComplete="cc-number" theme={{roundness: 18}} label={"Carbohydrates"} textColor="#4FA3C7" style={styles.inputField} outlineColor="#4FA3C7" activeOutlineColor="#4FA3C7" value={carbs} onChangeText={handleCarbs}/>
                   <TextInput mode="outlined" keyboardType="numeric" autoComplete="cc-number" theme={{roundness: 18}} label={"Protiens"} textColor="#72C87B" style={styles.inputField} activeOutlineColor="#72C87B" outlineColor="#72C87B" value={prots} onChangeText={handleProts}/>
                   <TextInput mode="outlined" keyboardType="numeric" autoComplete="cc-number" theme={{roundness: 18}} label={"Fats"} textColor="#D9D07E" style={styles.inputField} outlineColor="#D9D07E" activeOutlineColor="#D9D07E" value={fats} onChangeText={handleFats}/>
+          */}
           </View>
-          <Pressable onPress={closeModal}><View style={styles.submitButton}><Text style={{fontFamily:"Montserrat_500Medium", fontSize: 20, fontWeight: 600}}>Submit</Text></View></Pressable>
+          <Pressable onPress={closeModal}>
+            <View style={styles.submitButton}>
+              <Text
+                style={{
+                  fontFamily: "Montserrat_500Medium",
+                  fontSize: 20,
+                  fontWeight: 600,
+                }}
+              >
+                Submit
+              </Text>
+            </View>
+          </Pressable>
         </View>
       </View>
     );
@@ -50,7 +82,7 @@ export default function AddItemModal({closeModal} : {closeModal : any}) {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: "100%", 
+    height: "100%",
     borderRadius: 10,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     position: "absolute",
@@ -63,7 +95,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: "5%",
     top: "50%",
-    transform: [{translateY: -250}],
+    transform: [{ translateY: -250 }],
     shadowColor: "white",
     shadowOpacity: 0.7,
     shadowOffset: {
@@ -80,12 +112,12 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     marginTop: 16,
-    gap: 12
+    gap: 12,
   },
   inputField: {
     backgroundColor: "#1A1A1A",
     borderRadius: 20,
-    fontFamily: "Montserrat_500Medium"
+    fontFamily: "Montserrat_500Medium",
   },
   submitButton: {
     fontFamily: "Montserrat_500Medium",
@@ -98,6 +130,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 20,
     marginTop: 32,
-    borderRadius: 20
-  }
+    borderRadius: 20,
+  },
 });
